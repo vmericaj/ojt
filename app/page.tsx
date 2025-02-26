@@ -211,7 +211,7 @@
             className="mt-4 px-4 h-8 text-xs bg-red-800 text-white rounded-md" 
             onClick={handleArchiveTask}
           >
-            Archived
+            Archive
           </button>
             </div>
           </div>
