@@ -17,6 +17,7 @@ export default function CalendarDropdown({ selectedDate, setSelectedDate }) {
           placeholderText="Pick a date"
           showPopperArrow={false}
           popperPlacement="bottom-start"
+          minDate={new Date()} // ⬅️ Prevents past dates from being selected
         />
       </div>
     </div>

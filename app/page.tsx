@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import CalendarDropdown from "./components/CalendarDropdown";
 import UserList from "./components/UserList";
-import sample from "./java/sample";
+
 
 export default function Home() {
   const [showAddModal, setShowAddModal] = useState<boolean>(false);
@@ -110,8 +110,8 @@ return (
               <div className="flex justify-between items-center mt-2">
                 <p className="text-xs text-gray-600">Due: {task.deadline ? task.deadline.toLocaleDateString() : "No deadline"}</p>
                 <div className="flex gap-2">
-                  <span className="px-2 py-1 text-xs rounded-md bg-blue-100 text-blue-600">{task.task}</span>
-                  <span className={`px-2 py-1 text-xs rounded-md ${task.people ? "bg-green-100 text-green-600" : "bg-gray-100 text-gray-600"}`}>
+                  <span className="px-2 py-1 text-xs rounded-full bg-blue-100 text-blue-600">{task.task ?  task.task : "No task assigned"}</span>
+                  <span className={`px-2 py-1 text-xs rounded-full ${task.people ? "bg-green-100 text-green-600" : "bg-gray-100 text-gray-600"}`}>
                     {task.people ? task.people : "No assignee"}
                   </span>
                 </div>
@@ -133,15 +133,22 @@ return (
           {/* Modal Steps */}
           {step === 1 && (
             <div className="mb-2 w-full">
-              <label className="block text-xs font-semibold">TITLE</label>
-              <input
-                type="text"
-                placeholder="Enter task title"
-                value={taskData.title}
-                onChange={(e) => setTaskData({ ...taskData, title: e.target.value })}
-                className="mt-2 p-2 text-xs italic border border-gray-300 rounded-md w-full"
-              />
-            </div>
+            <label className="block text-xs font-semibold">Task Title</label>
+            <input
+              type="text"
+              placeholder="Enter task title"
+              value={taskData.title}
+              onChange={(e) => setTaskData({ ...taskData, title: e.target.value })}
+              className={`mt-2 p-2 text-xs italic border rounded-md w-full ${
+                !taskData.title ? "border-red-500" : "border-gray-300"
+              }`}
+              required
+            />
+            {!taskData.title && (
+              <p className="text-xs text-red-500 mt-1">Task title is required.</p>
+            )}
+          </div>
+          
           )}
           {step === 2 && (
             <div className="w-full">
@@ -151,10 +158,19 @@ return (
                 placeholder="Enter people involved"
                 value={taskData.people}
                 onChange={(e) => setTaskData({ ...taskData, people: e.target.value })}
-                className="mt-2 p-2 text-xs italic border border-gray-300 rounded-md w-full"
+                className={`mt-2 p-2 text-xs italic border rounded-md w-full ${
+                  !taskData.people ? "border-red-500" : "border-gray-300"
+                }`}
+                required
               />
+              {/* Show error message if field is empty */}
+              {!taskData.people && (
+                <p className="text-xs text-red-500 mt-1">Assignee is required.</p>
+              )}
             </div>
           )}
+
+
           {step === 3 && (
             <div className="w-full">
               <div className="mb-2">
@@ -171,6 +187,8 @@ return (
                   <option value="Documentation">Documentation</option>
                   <option value="Others">Others</option>
                 </select>
+                
+
               </div>
               <div className="mb-2">
                 <label className="block text-xs font-semibold">Task Description</label>
@@ -191,15 +209,15 @@ return (
           )}
           {/* Modal Buttons */}
           <div className="flex justify-between w-full mt-4">
-            <button className="px-4 h-8 text-xs bg-gray-400 text-white rounded-md" onClick={() => setShowAddModal(false)}>
+            <button className="px-4 h-6 text-xs italic bg-gray-400 text-white rounded-md" onClick={() => setShowAddModal(false)}>
               Close
             </button>
             {step < 3 ? (
-              <button className="px-4 h-8 text-xs bg-red-800 text-white rounded-md" onClick={nextStep}>
+              <button className="px-4 h-6 text-xs bg-red-800 text-white rounded-md" onClick={nextStep}>
                 Next
               </button>
             ) : (
-              <button className="px-4 h-8 text-xs bg-green-600 text-white rounded-md" onClick={handleSubmit}>
+              <button className="px-4 h-6 text-xs italic bg-green-600 text-white rounded-md" onClick={handleSubmit}>
                 Submit
               </button>
             )}
@@ -217,9 +235,9 @@ return (
             </div>
             <div className="mt-4">
               <div className="flex items-center gap-1">
-                <p className="text-xs italic bg-blue-100 text-blue-600 px-2 h-4 rounded-md">{selectedTask.task}</p>
-                <p className="text-xs italic bg-green-100 text-green-600 px-2 h-4 rounded-md">{selectedTask.people}</p>
-                <p className="text-xs italic bg-red-100 text-red-600 px-2 h-4 rounded-md">Deadline: {selectedTask.deadline ? selectedTask.deadline.toLocaleDateString() : "No deadline set"}</p>
+                <p className="text-xs italic bg-blue-100 text-blue-600 px-2 h-4 rounded-full">{selectedTask.task ? selectedTask.task : "No task assigned"}</p>
+                <p className="text-xs italic bg-green-100 text-green-600 px-2 h-4 rounded-full">{selectedTask.people ? selectedTask.people : "No assignee"}</p>
+                <p className="text-xs italic bg-red-100 text-red-600 px-2 h-4 rounded-full">Deadline: {selectedTask.deadline ? selectedTask.deadline.toLocaleDateString() : "No deadline set"}</p>
               </div>
               <p className="text-xs italic text-gray-600 mt-2">{selectedTask.description}</p>
               {selectedTask.notes && (
